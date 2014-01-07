@@ -51,7 +51,7 @@ class Operation < Info
     case attr
     when StyleAttrName
       if ["document", "rpc"].include?(value.source)
-	@style = value.source.intern
+	@style = value.source.to_sym
       else
 	raise Parser::AttributeConstraintError.new(
           "Unexpected value #{ value }.")

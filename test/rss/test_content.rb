@@ -94,7 +94,7 @@ EOR
           next unless parent.name != "item"
           parent.each_element do |elem|
             if elem.namespace == @uri
-              assert_equal(elem.text, @elems[elem.name.intern].to_s)
+              assert_equal(elem.text, @elems[elem.name.to_sym].to_s)
             end
           end
         end

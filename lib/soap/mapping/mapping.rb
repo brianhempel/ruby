@@ -273,7 +273,7 @@ module Mapping
 
   def self.get_attribute(obj, attr_name)
     if obj.is_a?(::Hash)
-      obj[attr_name] || obj[attr_name.intern]
+      obj[attr_name] || obj[attr_name.to_sym]
     else
       name = XSD::CodeGen::GenSupport.safevarname(attr_name)
       if obj.instance_variables.include?('@' + name)

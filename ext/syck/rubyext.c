@@ -2104,6 +2104,9 @@ syck_out_map( argc, argv, self )
     if (rb_scan_args(argc, argv, "11", &type_id, &style) == 1) {
         style = Qnil;
     }
+    if (!NIL_P(style)) {
+    	style = ID2SYM(rb_to_id(style));
+    }
     map = rb_funcall( cMap, s_new, 3, type_id, rb_hash_new(), style );
     syck_out_mark( rb_ivar_get( self, s_emitter ), map );
     rb_yield( map );
@@ -2122,6 +2125,9 @@ syck_out_seq( argc, argv, self )
     VALUE type_id, style, seq;
     if (rb_scan_args(argc, argv, "11", &type_id, &style) == 1) {
         style = Qnil;
+    }
+    if (!NIL_P(style)) {
+    	style = ID2SYM(rb_to_id(style));
     }
     seq = rb_funcall( cSeq, s_new, 3, type_id, rb_ary_new(), style );
     syck_out_mark( rb_ivar_get( self, s_emitter ), seq );
@@ -2143,6 +2149,9 @@ syck_out_scalar( argc, argv, self )
     VALUE type_id, str, style, scalar;
     if (rb_scan_args(argc, argv, "21", &type_id, &str, &style) == 2) {
         style = Qnil;
+    }
+    if (!NIL_P(style)) {
+    	style = ID2SYM(rb_to_id(style));
     }
     scalar = rb_funcall( cScalar, s_new, 3, type_id, str, style );
     syck_out_mark( rb_ivar_get( self, s_emitter ), scalar );

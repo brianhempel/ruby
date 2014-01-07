@@ -1787,19 +1787,19 @@ localjump_error(mesg, value, reason)
     rb_iv_set(exc, "@exit_value", value);
     switch (reason) {
       case TAG_BREAK:
-	id = rb_intern("break"); break;
+	id = rb_str_new2("break"); break;
       case TAG_REDO:
-	id = rb_intern("redo"); break;
+	id = rb_str_new2("redo"); break;
       case TAG_RETRY:
-	id = rb_intern("retry"); break;
+	id = rb_str_new2("retry"); break;
       case TAG_NEXT:
-	id = rb_intern("next"); break;
+	id = rb_str_new2("next"); break;
       case TAG_RETURN:
-	id = rb_intern("return"); break;
+	id = rb_str_new2("return"); break;
       default:
-	id = rb_intern("noreason"); break;
+	id = rb_str_new2("noreason"); break;
     }
-    rb_iv_set(exc, "@reason", ID2SYM(id));
+    rb_iv_set(exc, "@reason", id);
     rb_exc_raise(exc);
 }
 
@@ -2770,7 +2770,7 @@ call_trace_func(event, node, self, id, klass)
 	proc_invoke(trace_func, rb_ary_new3(6, rb_str_new2(event_name),
 					    srcfile,
 					    INT2FIX(ruby_sourceline),
-					    id?ID2SYM(id):Qnil,
+					    id?rb_str_new2(rb_id2name(id)):Qnil,
 					    self?rb_f_binding(self):Qnil,
 					    klass),
 		    Qundef, 0);
@@ -4257,7 +4257,7 @@ rb_obj_respond_to(obj, id, priv)
     else {
 	VALUE args[2];
 	int n = 0;
-	args[n++] = ID2SYM(id);
+	args[n++] = rb_str_new2(rb_id2name(id));
 	if (priv) args[n++] = Qtrue;
 	return RTEST(rb_funcall2(obj, respond_to, n, args));
     }
@@ -5686,13 +5686,13 @@ rb_method_missing(argc, argv, obj)
     const char *format = 0;
     NODE *cnode = ruby_current_node;
 
-    if (argc == 0 || !SYMBOL_P(argv[0])) {
+    if (argc == 0) {
 	rb_raise(rb_eArgError, "no id given");
     }
 
-    stack_check();
+    id = SYM2ID(rb_str_intern(argv[0])); // a few more calls than might be necessary, but rb_str_intern has more validity checks
 
-    id = SYM2ID(argv[0]);
+    stack_check();
 
     if (last_call_status & CSTAT_PRIV) {
 	format = "private method `%s' called for %s";
@@ -5764,7 +5764,7 @@ method_missing(obj, id, argc, argv, call_status)
 	nargv = ALLOCA_N(VALUE, argc+1);
 	MEMCPY(nargv+1, argv, VALUE, argc);
     }
-    nargv[0] = ID2SYM(id);
+    nargv[0] = rb_str_new2(rb_id2name(id));
     return rb_funcall2(obj, missing, argc+1, nargv);
 }
 
@@ -8202,7 +8202,7 @@ rb_f_method_name()
 {
     struct FRAME* prev = ruby_frame->prev;
     if (prev && prev->orig_func) {
-	return ID2SYM(prev->orig_func);
+	return rb_str_new2(rb_id2name(prev->orig_func));
     }
     else {
 	return Qnil;

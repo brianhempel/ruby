@@ -353,7 +353,7 @@ private
     when TYPE_MODULE
       obj = Mapping.class_from_name(node['name'].data)
     when TYPE_SYMBOL
-      obj = node['id'].data.intern
+      obj = node['id'].data.to_sym
     when TYPE_STRUCT
       typestr = Mapping.elename2name(node['type'].data)
       klass = Mapping.class_from_name(typestr)

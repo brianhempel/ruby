@@ -313,13 +313,13 @@ class Context
 	    pname = pos
 	    pos = pos.to_i
 	  else
-	    pname = pos = pos.intern.id2name
+	    pname = pos = pos.to_sym
 	  end
 	  break_points.push [true, 0, klass || file, pos]
 	  stdout.printf "Set breakpoint %d at %s:%s\n", break_points.size, klass || file, pname
 
 	when /^\s*b(?:reak)?\s+(.+)[#.]([^.:]+)$/
-	  pos = $2.intern.id2name
+	  pos = $2.to_sym
 	  klass = debug_eval($1, binding)
 	  break_points.push [true, 0, klass, pos]
 	  stdout.printf "Set breakpoint %d at %s.%s\n", break_points.size, klass, pos

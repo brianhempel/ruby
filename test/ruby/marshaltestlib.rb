@@ -367,7 +367,7 @@ module MarshalTestLib
     marshal_equal(:[])
     marshal_equal(:[]=)
     marshal_equal(:`)   #`
-    marshal_equal("a b".intern)
+    marshal_equal("a b".to_sym)
   end
 
   class MyTime < Time; def initialize(v, *args) super(*args); @v = v; end end

@@ -4557,6 +4557,13 @@ rb_str_intern(s)
 }
 
 
+VALUE
+rb_str_to_proc(VALUE str)
+{
+	return sym_to_proc(rb_str_intern(str));
+}
+
+
 /*
  *  call-seq:
  *     str.sum(n=16)   => integer
@@ -4967,6 +4974,7 @@ Init_String()
     rb_define_method(rb_cString, "to_f", rb_str_to_f, 0);
     rb_define_method(rb_cString, "to_s", rb_str_to_s, 0);
     rb_define_method(rb_cString, "to_str", rb_str_to_s, 0);
+    rb_define_method(rb_cString, "id2name", rb_str_to_s, 0);
     rb_define_method(rb_cString, "inspect", rb_str_inspect, 0);
     rb_define_method(rb_cString, "dump", rb_str_dump, 0);
 
@@ -4989,7 +4997,8 @@ Init_String()
     rb_define_method(rb_cString, "<<", rb_str_concat, 1);
     rb_define_method(rb_cString, "crypt", rb_str_crypt, 1);
     rb_define_method(rb_cString, "intern", rb_str_intern, 0);
-    rb_define_method(rb_cString, "to_sym", rb_str_intern, 0);
+    rb_define_method(rb_cString, "to_sym", rb_str_to_s, 0);
+    rb_define_method(rb_cString, "to_proc", rb_str_to_proc, 0);
 
     rb_define_method(rb_cString, "include?", rb_str_include, 1);
     rb_define_method(rb_cString, "start_with?", rb_str_start_with, -1);

@@ -253,7 +253,7 @@ class TkVariable
         when :string
           val
         when :symbol
-          val.intern
+          val.to_sym
         when :list
           tk_split_simplelist(val)
         when :numlist
@@ -973,11 +973,11 @@ end
   end
 
   def to_sym
-    _value.intern
+    _value.to_sym
   end
   alias symbol to_sym
   def element_to_sym(*idxs)
-    _element_value(*idxs).intern
+    _element_value(*idxs).to_sym
   end
   alias symbol_element element_to_sym
   def set_symbol(val)

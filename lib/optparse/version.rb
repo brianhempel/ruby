@@ -22,7 +22,7 @@ class << OptionParser
     if pkg.size == 1 and pkg[0] == "all"
       self.search_const(::Object, /\AV(?:ERSION|ersion)\z/) do |klass, cname, version|
         unless cname[1] == ?e and klass.const_defined?(:Version)
-          show.call(klass, cname.intern, version)
+          show.call(klass, cname.to_sym, version)
         end
       end
     else

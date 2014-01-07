@@ -37,7 +37,7 @@ class Body < Info
       @parts = value.source
     when UseAttrName
       if ['literal', 'encoded'].include?(value.source)
-        @use = value.source.intern
+        @use = value.source.to_sym
       else
         raise RuntimeError.new("unknown use of soap:body: #{value.source}")
       end

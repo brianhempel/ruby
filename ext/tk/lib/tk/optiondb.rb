@@ -238,7 +238,7 @@ module TkOptionDB
         METHOD_TBL = TkCore::INTERP.create_table
         ADD_METHOD = #{add}
         SAFE_MODE  = #{safe}
-        %w(#{func_str}).each{|f| METHOD_TBL[f.intern] = nil }
+        %w(#{func_str}).each{|f| METHOD_TBL[f.to_sym] = nil }
       end
     EOD
 
@@ -292,13 +292,13 @@ module TkOptionDB
     cmd_klass.instance_variable_set('@add_method', add)
     cmd_klass.instance_variable_set('@safe_mode', safe)
     func.each{|f| 
-      cmd_klass.instance_variable_get('@method_tbl')[f.to_s.intern] = nil
+      cmd_klass.instance_variable_get('@method_tbl')[f.to_s.to_sym] = nil
     }
 =begin
     cmd_klass.const_set(:METHOD_TBL, TkCore::INTERP.create_table)
     cmd_klass.const_set(:ADD_METHOD, add)
     cmd_klass.const_set(:SAFE_MODE, safe)
-    func.each{|f| cmd_klass::METHOD_TBL[f.to_s.intern] = nil }
+    func.each{|f| cmd_klass::METHOD_TBL[f.to_s.to_sym] = nil }
 =end
 
     cmd_klass

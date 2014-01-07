@@ -16,7 +16,7 @@ class TestRPC < Test::Unit::TestCase
       add_rpc_method(self, 'echo_err', 'arg1', 'arg2')
     end
   
-    DummyPerson = Struct.new("family-name".intern, :given_name)
+    DummyPerson = Struct.new("family-name", :given_name)
     def echo(arg1, arg2)
       case arg1.family_name
       when 'normal'

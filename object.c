@@ -1171,6 +1171,7 @@ sym_inspect(sym)
 	str = rb_str_dump(str);
 	strncpy(RSTRING(str)->ptr, ":\"", 2);
     }
+    rb_str_append(str, rb_str_new2(".intern")); // perhaps not the most efficient way to do this...
     return str;
 }
 
@@ -1235,7 +1236,7 @@ VALUE rb_proc_new _((VALUE (*)(ANYARGS/* VALUE yieldarg[, VALUE procarg] */), VA
  *   (1..3).collect(&:to_s)  #=> ["1", "2", "3"]
  */
 
-static VALUE
+VALUE
 sym_to_proc(VALUE sym)
 {
     return rb_proc_new(sym_call, (VALUE)SYM2ID(sym));
@@ -2793,7 +2794,8 @@ Init_Object()
     rb_define_method(rb_cSymbol, "inspect", sym_inspect, 0);
     rb_define_method(rb_cSymbol, "to_s", sym_to_s, 0);
     rb_define_method(rb_cSymbol, "id2name", sym_to_s, 0);
-    rb_define_method(rb_cSymbol, "to_sym", sym_to_sym, 0);
+    rb_define_method(rb_cSymbol, "intern", sym_to_sym, 0);
+    rb_define_method(rb_cSymbol, "to_sym", sym_to_s, 0);
     rb_define_method(rb_cSymbol, "to_proc", sym_to_proc, 0);
     rb_define_method(rb_cSymbol, "===", rb_obj_equal, 1); 
 

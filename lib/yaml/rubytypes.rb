@@ -64,7 +64,7 @@ class Struct
             end
             if not struct_type
                 struct_def = [ tag.split( ':', 4 ).last ]
-                struct_type = Struct.new( *struct_def.concat( val.keys.collect { |k| k.intern } ) ) 
+                struct_type = Struct.new( *struct_def.concat( val.keys.collect { |k| k.to_sym } ) ) 
             end
 
             #
@@ -184,7 +184,7 @@ class Symbol
     def Symbol.yaml_new( klass, tag, val )
         if String === val
             val = YAML::load( val ) if val =~ /\A(["']).*\1\z/
-            val.intern
+            val.to_sym
         else
             raise YAML::TypeError, "Invalid Symbol: " + val.inspect
         end

@@ -10,14 +10,14 @@ class TestSymbol < Test::Unit::TestCase
 
   def test_inspect_invalid
     # 2) Symbol#inspect sometimes returns invalid symbol representations:
-    assert_eval_inspected(:"!")
-    assert_eval_inspected(:"=")
-    assert_eval_inspected(:"0")
-    assert_eval_inspected(:"$1")
-    assert_eval_inspected(:"@1")
-    assert_eval_inspected(:"@@1")
-    assert_eval_inspected(:"@")
-    assert_eval_inspected(:"@@")
+    assert_eval_inspected(:"!".intern)
+    assert_eval_inspected(:"=".intern)
+    assert_eval_inspected(:"0".intern)
+    assert_eval_inspected(:"$1".intern)
+    assert_eval_inspected(:"@1".intern)
+    assert_eval_inspected(:"@@1".intern)
+    assert_eval_inspected(:"@".intern)
+    assert_eval_inspected(:"@@".intern)
   end
 
   def assert_inspect_evaled(n)
@@ -26,53 +26,53 @@ class TestSymbol < Test::Unit::TestCase
 
   def test_inspect_suboptimal
     # 3) Symbol#inspect sometimes returns suboptimal symbol representations:
-    assert_inspect_evaled(':foo')
-    assert_inspect_evaled(':foo!')
-    assert_inspect_evaled(':bar?')
-    assert_inspect_evaled(':<<')
-    assert_inspect_evaled(':>>')
-    assert_inspect_evaled(':<=')
-    assert_inspect_evaled(':>=')
-    assert_inspect_evaled(':=~')
-    assert_inspect_evaled(':==')
-    assert_inspect_evaled(':===')
-    assert_raise(SyntaxError) {eval ':='}
-    assert_inspect_evaled(':*')
-    assert_inspect_evaled(':**')
-    assert_raise(SyntaxError) {eval ':***'}
-    assert_inspect_evaled(':+')
-    assert_inspect_evaled(':-')
-    assert_inspect_evaled(':+@')
-    assert_inspect_evaled(':-@')
-    assert_inspect_evaled(':|')
-    assert_inspect_evaled(':^')
-    assert_inspect_evaled(':&')
-    assert_inspect_evaled(':/')
-    assert_inspect_evaled(':%')
-    assert_inspect_evaled(':~')
-    assert_inspect_evaled(':`')
-    assert_inspect_evaled(':[]')
-    assert_inspect_evaled(':[]=')
-    assert_raise(SyntaxError) {eval ':||'}
-    assert_raise(SyntaxError) {eval ':&&'}
-    assert_raise(SyntaxError) {eval ':['}
+    assert_inspect_evaled(':foo.intern')
+    assert_inspect_evaled(':foo!.intern')
+    assert_inspect_evaled(':bar?.intern')
+    assert_inspect_evaled(':<<.intern')
+    assert_inspect_evaled(':>>.intern')
+    assert_inspect_evaled(':<=.intern')
+    assert_inspect_evaled(':>=.intern')
+    assert_inspect_evaled(':=~.intern')
+    assert_inspect_evaled(':==.intern')
+    assert_inspect_evaled(':===.intern')
+    assert_raise(SyntaxError) {eval ':=.intern'}
+    assert_inspect_evaled(':*.intern')
+    assert_inspect_evaled(':**.intern')
+    assert_raise(SyntaxError) {eval ':***.intern'}
+    assert_inspect_evaled(':+.intern')
+    assert_inspect_evaled(':-.intern')
+    assert_inspect_evaled(':+@.intern')
+    assert_inspect_evaled(':-@.intern')
+    assert_inspect_evaled(':|.intern')
+    assert_inspect_evaled(':^.intern')
+    assert_inspect_evaled(':&.intern')
+    assert_inspect_evaled(':/.intern')
+    assert_inspect_evaled(':%.intern')
+    assert_inspect_evaled(':~.intern')
+    assert_inspect_evaled(':`.intern')
+    assert_inspect_evaled(':[].intern')
+    assert_inspect_evaled(':[]=.intern')
+    assert_raise(SyntaxError) {eval ':||.intern'}
+    assert_raise(SyntaxError) {eval ':&&.intern'}
+    assert_raise(SyntaxError) {eval ':[.intern'}
   end
 
   def test_inspect_dollar
     # 4) :$- always treats next character literally:
     sym = "$-".intern
-    assert_nothing_raised(SyntaxError) {assert_equal(sym, eval(':$-'))}
-    assert_nothing_raised(SyntaxError) {assert_equal(sym, eval(":$-\n"))}
-    assert_nothing_raised(SyntaxError) {assert_equal(sym, eval(":$- "))}
-    assert_nothing_raised(SyntaxError) {assert_equal(sym, eval(":$-#"))}
-    assert_raise(SyntaxError) {eval ':$-('}
+    assert_nothing_raised(SyntaxError) {assert_equal(sym, eval(':$-.intern'))}
+    assert_nothing_raised(SyntaxError) {assert_equal(sym, eval("(:$-\n).intern"))}
+    assert_nothing_raised(SyntaxError) {assert_equal(sym, eval(":$- .intern"))}
+    assert_nothing_raised(SyntaxError) {assert_equal(sym, eval("(:$-#\n).intern"))} # I'm not sure I understand this test :o
+    assert_raise(SyntaxError) {eval ':$-(.intern'}
   end
 
   def test_inspect_number
     # 5) Inconsistency between :$0 and :$1? The first one is valid, but the 
     # latter isn't.
-    assert_inspect_evaled(':$0')
-    assert_inspect_evaled(':$1')
+    assert_inspect_evaled(':$0.intern')
+    assert_inspect_evaled(':$1.intern')
   end
 
   def test_to_proc

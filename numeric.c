@@ -3106,7 +3106,8 @@ Init_Numeric()
     rb_define_method(rb_cFixnum, "to_s", fix_to_s, -1);
 
     rb_define_method(rb_cFixnum, "id2name", fix_id2name, 0);
-    rb_define_method(rb_cFixnum, "to_sym", fix_to_sym, 0);
+    rb_define_method(rb_cFixnum, "intern", fix_to_sym, 0);
+    rb_define_method(rb_cFixnum, "to_sym", fix_id2name, 0);
 
     rb_define_method(rb_cFixnum, "-@", fix_uminus, 0);
     rb_define_method(rb_cFixnum, "+", fix_plus, 1);

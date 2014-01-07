@@ -146,7 +146,7 @@ module RSS
       actual = {}
       cloud_elem.attributes.each do |name, value|
         value = value.to_i if name == "port"
-        actual[name.intern] = value
+        actual[name.to_sym] = value
       end
       assert_equal(cloud_params, actual)
     end
@@ -318,7 +318,7 @@ module RSS
       actual = {}
       enclosure_elem.attributes.each do |name, value|
         value = value.to_i if name == "length"
-        actual[name.intern] = value
+        actual[name.to_sym] = value
       end
       assert_equal(enclosure_params, actual)
     end
@@ -353,7 +353,7 @@ module RSS
         actual[:content] = guid_elem.text if guid_elem.text
         guid_elem.attributes.each do |name, value|
           value = value == "true" if name == "isPermaLink"
-          actual[name.intern] = value
+          actual[name.to_sym] = value
         end
         assert_equal(guid_params, actual)
       end
@@ -374,7 +374,7 @@ module RSS
       actual = {}
       actual[:content] = source_elem.text
       source_elem.attributes.each do |name, value|
-        actual[name.intern] = value
+        actual[name.to_sym] = value
       end
       assert_equal(source_params, actual)
     end

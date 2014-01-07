@@ -1005,10 +1005,10 @@ class Date
     def once(*ids) # :nodoc:
       for id in ids
 	module_eval <<-"end;"
-	  alias_method :__#{id.to_i}__, :#{id.to_s}
-	  private :__#{id.to_i}__
+	  alias_method :__#{id.intern.to_i}__, :#{id.to_s}
+	  private :__#{id.intern.to_i}__
 	  def #{id.to_s}(*args, &block)
-	    (@__#{id.to_i}__ ||= [__#{id.to_i}__(*args, &block)])[0]
+	    (@__#{id.intern.to_i}__ ||= [__#{id.intern.to_i}__(*args, &block)])[0]
 	  end
 	end;
       end
@@ -1063,7 +1063,9 @@ class Date
   once :jd, :day_fraction, :mjd, :ld
 
   # Get the date as a Civil Date, [year, month, day_of_month]
-  def civil() self.class.jd_to_civil(jd, @sg) end # :nodoc:
+  def civil()
+    self.class.jd_to_civil(jd, @sg)
+  end # :nodoc:
 
   # Get the date as an Ordinal Date, [year, day_of_year]
   def ordinal() self.class.jd_to_ordinal(jd, @sg) end # :nodoc:

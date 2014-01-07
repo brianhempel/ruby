@@ -84,7 +84,7 @@ module RDoc
         type = $1
         unless GENERATORS.has_key? type
           GENERATORS[type] = Generator.new("rdoc/generators/#{gen}",
-                                           "#{type.upcase}Generator".intern,
+                                           "#{type.upcase}Generator".to_sym,
                                            type)
         end
       }

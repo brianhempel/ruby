@@ -138,7 +138,7 @@ module TupleSpaceTestModule
 
     tmpl = Rinda::Template.new([Symbol])
     assert_equal(1, tmpl.size)
-    assert(tmpl.match([:hello]))
+    assert(tmpl.match([:hello.intern]))
     assert(tmpl.match([Symbol]))
     assert(!tmpl.match(['Symbol']))
 
@@ -150,7 +150,7 @@ module TupleSpaceTestModule
     assert(!tmpl.match({"message"=>"Hello", "no_name"=>"Foo"}))
 
     assert_raises(Rinda::InvalidHashTupleKey) do
-      tmpl = Rinda::Template.new({:message=>String, "name"=>String})
+      tmpl = Rinda::Template.new({:message.intern=>String, "name"=>String})
     end
     tmpl = Rinda::Template.new({"name"=>String})
     assert_equal(1, tmpl.size)
@@ -183,7 +183,7 @@ module TupleSpaceTestModule
     assert(!tmpl.match({"message"=>"Hello", "no_name"=>"Foo"}))
 
     assert_raises(Rinda::InvalidHashTupleKey) do
-      @ts.write({:message=>String, "name"=>String})
+      @ts.write({:message.intern=>String, "name"=>String})
     end
 
     @ts.write([1, 2, 3])
@@ -257,7 +257,7 @@ module TupleSpaceTestModule
     @ts.write([:symbol, :symbol])
     @ts.write(['string', :string])
     assert_equal([[:symbol, :symbol]], @ts.read_all([:symbol, nil]))
-    assert_equal([[:symbol, :symbol]], @ts.read_all([Symbol, nil]))
+    assert_equal([[:symbol, :symbol], [:string, :string]], @ts.read_all([String, nil]))
     assert_equal([], @ts.read_all([:nil, nil]))
   end
 

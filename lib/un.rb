@@ -46,7 +46,7 @@ def setup(options = "")
   OptionParser.new do |o|
     options.scan(/.:?/) do |s|
       o.on("-" + s.tr(":", " ")) do |val|
-        opt_hash[s.delete(":").intern] = val
+        opt_hash[s.delete(":").to_sym] = val
       end
     end
     o.on("-v") do opt_hash[:verbose] = true end

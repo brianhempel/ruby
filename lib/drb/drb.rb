@@ -1469,7 +1469,7 @@ module DRb
     # a NameError is thrown.
     def check_insecure_method(obj, msg_id)
       return true if Proc === obj && msg_id == :__drb_yield
-      raise(ArgumentError, "#{any_to_s(msg_id)} is not a symbol") unless Symbol == msg_id.class
+#      raise(ArgumentError, "#{any_to_s(msg_id)} is not a symbol") unless Symbol == msg_id.class
       raise(SecurityError, "insecure method `#{msg_id}'") if insecure_method?(msg_id)
       
       if obj.private_methods.include?(msg_id.to_s)
@@ -1532,7 +1532,7 @@ module DRb
       def init_with_client
 	obj, msg, argv, block = @client.recv_request
         @obj = obj
-        @msg_id = msg.intern
+        @msg_id = msg.to_sym
         @argv = argv
         @block = block
       end

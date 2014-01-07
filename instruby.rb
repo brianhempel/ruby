@@ -69,7 +69,7 @@ def parse_args(argv = ARGV)
     when /\A\w[-\w+]*=\z/
       mflags << v
     when /\A\w[-\w+]*\z/
-      $install << v.intern
+      $install << v.to_sym
     else
       raise OptionParser::InvalidArgument, v
     end

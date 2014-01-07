@@ -2906,7 +2906,7 @@ module Net
         if @str.index(/\(([^)]*)\)/ni, @pos)
           @pos = $~.end(0)
           return $1.scan(FLAG_REGEXP).collect { |flag, atom|
-            atom || flag.capitalize.intern
+            atom || flag.capitalize.to_sym
           }
         else
           parse_error("invalid flag list")

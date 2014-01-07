@@ -270,7 +270,7 @@ EOR
         parent.each_element do |elem|
           if elem.namespace == DC_URI
             assert_equal(CGI.escapeHTML(elem.text),
-                         DC_ELEMENTS[elem.name.intern].to_s)
+                         DC_ELEMENTS[elem.name.to_sym].to_s)
           end
         end
       end

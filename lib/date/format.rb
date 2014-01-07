@@ -120,7 +120,7 @@ class Date
       def method_missing(t, *args, &block)
 	t = t.to_s
 	set = t.chomp!('=')
-	t = t.intern
+	t = t.to_sym
 	if set
 	  @elem[t] = args[0]
 	else

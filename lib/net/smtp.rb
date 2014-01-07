@@ -764,7 +764,7 @@ module Net
     end
 
     def auth_method(type)
-      "auth_#{type.to_s.downcase}".intern
+      "auth_#{type.to_s.downcase}".to_sym
     end
 
     def check_auth_args(user, secret)

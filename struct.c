@@ -310,7 +310,7 @@ rb_struct_s_def(argc, argv, klass)
     ID id;
 
     rb_scan_args(argc, argv, "1*", &name, &rest);
-    if (!NIL_P(name) && SYMBOL_P(name)) {
+    if (!NIL_P(name) && !SYMBOL_P(name) && !(StringValuePtr(name)[0] >= 'A' && StringValuePtr(name)[0] <= 'Z')) {
 	rb_ary_unshift(rest, name);
 	name = Qnil;
     }

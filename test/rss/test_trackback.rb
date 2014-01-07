@@ -122,7 +122,7 @@ EOR
         if @parents.include?(parent.name)
           parent.each_element do |elem|
             if elem.namespace == @uri
-              assert_equal(elem.attributes["resource"], @elems[elem.name.intern])
+              assert_equal(elem.attributes["resource"], @elems[elem.name.to_sym])
             end
           end
         end

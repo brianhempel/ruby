@@ -158,13 +158,13 @@ num_to_asn1integer(VALUE obj, ASN1_INTEGER *ai)
  */
 #define ossl_asn1_get_value(o)       rb_attr_get((o),rb_intern("@value"))
 #define ossl_asn1_get_tag(o)         rb_attr_get((o),rb_intern("@tag"))
-#define ossl_asn1_get_tagging(o)     rb_attr_get((o),rb_intern("@tagging"))
-#define ossl_asn1_get_tag_class(o)   rb_attr_get((o),rb_intern("@tag_class"))
+#define ossl_asn1_get_tagging(o)     (NIL_P(rb_attr_get((o),rb_intern("@tagging"))) ? rb_attr_get((o),rb_intern("@tagging")) : rb_str_intern(rb_attr_get((o),rb_intern("@tagging"))))
+#define ossl_asn1_get_tag_class(o)   rb_str_intern(rb_attr_get((o),rb_intern("@tag_class")))
 
 #define ossl_asn1_set_value(o,v)     rb_iv_set((o),"@value",(v))
 #define ossl_asn1_set_tag(o,v)       rb_iv_set((o),"@tag",(v))
-#define ossl_asn1_set_tagging(o,v)   rb_iv_set((o),"@tagging",(v))
-#define ossl_asn1_set_tag_class(o,v) rb_iv_set((o),"@tag_class",(v))
+#define ossl_asn1_set_tagging(o,v)   (NIL_P(v) ? rb_iv_set((o),"@tagging",(v)) : rb_iv_set((o),"@tagging",rb_str_new2(rb_id2name(SYM2ID(v)))))
+#define ossl_asn1_set_tag_class(o,v) rb_iv_set((o),"@tag_class",rb_str_new2(rb_id2name(SYM2ID(v))))
 
 VALUE mASN1;
 VALUE eASN1Error;
@@ -653,8 +653,7 @@ ossl_asn1_class2sym(int tc)
 static VALUE
 ossl_asn1data_initialize(VALUE self, VALUE value, VALUE tag, VALUE tag_class)
 {
-    if(!SYMBOL_P(tag_class))
-	ossl_raise(eASN1Error, "invalid tag class");
+	tag_class = rb_funcall(tag_class, rb_intern("intern"), 0, 0);
     if((SYM2ID(tag_class) == sUNIVERSAL) && NUM2INT(tag) > 31)
 	ossl_raise(eASN1Error, "tag number for Universal too large");
     ossl_asn1_set_tag(self, tag);
@@ -869,6 +868,9 @@ ossl_asn1_initialize(int argc, VALUE *argv, VALUE self)
 
     rb_scan_args(argc, argv, "13", &value, &tag, &tagging, &tag_class);
     if(argc > 1){
+    tag_class = rb_funcall(tag_class, rb_intern("intern"), 0, 0);
+    if (!NIL_P(tagging))
+    	tagging = rb_funcall(tagging, rb_intern("intern"), 0, 0);
 	if(NIL_P(tag))
 	    ossl_raise(eASN1Error, "must specify tag number");
         if(NIL_P(tagging))

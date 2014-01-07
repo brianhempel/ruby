@@ -403,12 +403,12 @@ Message: <"Error">
             throw :thing
           }
         }
-        check_fails("message.\n<:thing> expected to be thrown but\n<:thing2> was thrown.") {
+        check_fails("message.\n<\"thing\"> expected to be thrown but\n<\"thing2\"> was thrown.") {
           assert_throws(:thing, "message") {
             throw :thing2
           }
         }
-        check_fails("message.\n<:thing> should have been thrown.") {
+        check_fails("message.\n<\"thing\"> should have been thrown.") {
           assert_throws(:thing, "message") {
             1 + 1
           }
@@ -421,7 +421,7 @@ Message: <"Error">
             1 + 1
           }
         }
-        check_fails("message.\n<:thing> was thrown when nothing was expected.") {
+        check_fails("message.\n<\"thing\"> was thrown when nothing was expected.") {
           assert_nothing_thrown("message") {
             throw :thing
           }
@@ -450,7 +450,7 @@ Message: <"Error">
         check_fails("<0.15>\ngiven as the method name argument to #assert_respond_to must be a Symbol or #respond_to?(:to_str).") {
           assert_respond_to("thing", 0.15)
         }
-        check_fails("message.\n<:symbol>\nof type <Symbol>\nexpected to respond_to?<:non_existent>.") {
+        check_fails("message.\n<\"symbol\">\nof type <String>\nexpected to respond_to?<\"non_existent\">.") {
           assert_respond_to(:symbol, :non_existent, "message")
         }
       end
@@ -472,7 +472,7 @@ Message: <"Error">
         check_fails("message.\n<0.5> and\n<0.4> expected to be within\n<0.05> of each other.") {
           assert_in_delta(0.5, 0.4, 0.05, "message")
         }
-        check_fails(%r{The arguments must respond to to_f; the first float did not\.\n<.+>\nof type <Object>\nexpected to respond_to\?<:to_f>.}) {
+        check_fails(%r{The arguments must respond to to_f; the first float did not\.\n<.+>\nof type <Object>\nexpected to respond_to\?<"to_f">.}) {
           assert_in_delta(Object.new, 0.4, 0.1)
         }
         check_fails("The delta should not be negative.\n<-0.1> expected to be\n>=\n<0.0>.") {

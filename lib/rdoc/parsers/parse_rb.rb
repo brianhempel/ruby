@@ -287,7 +287,7 @@ module RubyToken
 	TkReading2Token[reading] = [token_c].concat(opts)
       end
     end
-    TkSymbol2Token[token_n.intern] = token_c
+    TkSymbol2Token[token_n.to_sym] = token_c
 
     if token_c <= TkOp
       token_c.class_eval %{

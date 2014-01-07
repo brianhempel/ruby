@@ -272,10 +272,10 @@ static void fixup_nodes();
 %token <node> tNTH_REF tBACK_REF
 %token <num>  tREGEXP_END
 
-%type <node> singleton strings string string1 xstring regexp
+%type <node> singleton strings string string1 dsym xstring regexp
 %type <node> string_contents xstring_contents string_content
 %type <node> words qwords word_list qword_list word
-%type <node> literal numeric dsym cpath
+%type <node> literal numeric dsym1 cpath
 %type <node> bodystmt compstmt stmts stmt expr arg primary command command_call method_call
 %type <node> expr_value arg_value primary_value
 %type <node> if_tail opt_else case_body cases opt_rescue exc_list exc_var opt_ensure
@@ -287,7 +287,7 @@ static void fixup_nodes();
 %type <node> for_var block_var opt_block_var block_par
 %type <node> brace_block cmd_brace_block do_block lhs none fitem
 %type <node> mlhs mlhs_head mlhs_basic mlhs_entry mlhs_item mlhs_node
-%type <id>   fsym variable sym symbol operation operation2 operation3
+%type <id>   fsym variable sym sym1 symbol1 operation operation2 operation3
 %type <id>   cname fname op
 %type <num>  f_norm_arg f_arg
 %token tUPLUS 		/* unary+ */
@@ -924,14 +924,14 @@ fname		: tIDENTIFIER
 		;
 
 fsym		: fname
-		| symbol
+		| symbol1
 		;
 
 fitem		: fsym
 		    {
 			$$ = NEW_LIT(ID2SYM($1));
 		    }
-		| dsym
+		| dsym1
 		;
 
 undef_list	: fitem
@@ -1999,11 +1999,6 @@ opt_ensure	: kENSURE compstmt
 		;
 
 literal		: numeric
-		| symbol
-		    {
-			$$ = NEW_LIT(ID2SYM($1));
-		    }
-		| dsym
 		;
 
 strings		: string
@@ -2017,9 +2012,15 @@ strings		: string
 			}
 			$$ = node;
 		    }
+		| tSYMBEG sym
+		    {
+		        lex_state = EXPR_END;
+				$$ = NEW_STR(rb_str_new2(rb_id2name($2)));
+		    }
 		;
 
 string		: string1
+		| dsym
 		| string string1
 		    {
 			$$ = literal_concat($1, $2);
@@ -2027,6 +2028,12 @@ string		: string1
 		;
 
 string1		: tSTRING_BEG string_contents tSTRING_END
+		    {
+			$$ = $2;
+		    }
+		;
+
+dsym		: tSYMBEG xstring_contents tSTRING_END
 		    {
 			$$ = $2;
 		    }
@@ -2194,20 +2201,26 @@ string_dvar	: tGVAR {$$ = NEW_GVAR($1);}
 		| backref
 		;
 
-symbol		: tSYMBEG sym
-		    {
-		        lex_state = EXPR_END;
-			$$ = $2;
-		    }
-		;
-
 sym		: fname
 		| tIVAR
 		| tGVAR
 		| tCVAR
 		;
 
-dsym		: tSYMBEG xstring_contents tSTRING_END
+symbol1		: tSYMBEG sym1
+		    {
+		        lex_state = EXPR_END;
+			$$ = $2;
+		    }
+		;
+
+sym1		: fname
+		| tIVAR
+		| tGVAR
+		| tCVAR
+		;
+
+dsym1		: tSYMBEG xstring_contents tSTRING_END
 		    {
 		        lex_state = EXPR_END;
 			if (!($$ = $2)) {

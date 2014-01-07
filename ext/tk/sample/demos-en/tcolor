@@ -143,7 +143,7 @@ def tc_scaleChanged
   scale2 = $root.middle.middle.scale2
   scale3 = $root.middle.middle.scale3
 
-  case $colorSpace.value.intern
+  case $colorSpace.value.to_sym
   when :rgb
     $red = (scale1.get * 65.535).to_i
     $green = (scale2.get * 65.535).to_i
@@ -180,7 +180,7 @@ def tc_setScales
   scale2 = $root.middle.middle.scale2
   scale3 = $root.middle.middle.scale3
   
-  case $colorSpace.value.intern
+  case $colorSpace.value.to_sym
   when :rgb
     scale1.set($red / 65.535)
     scale2.set($green / 65.535)

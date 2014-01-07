@@ -249,7 +249,7 @@ module DRbCore
   def test_10_yield
     @there.simple_hash.each do |k, v|
       assert_kind_of(String, k)
-      assert_kind_of(Symbol, v)
+      assert_kind_of(String, v)
     end
   end
 

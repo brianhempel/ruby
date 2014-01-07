@@ -394,7 +394,7 @@ private
         values = request_document(body, mapping_registry,
           literal_mapping_registry, opt)
       end
-      result = receiver.method(@name.intern).call(*values)
+      result = receiver.method(@name.to_sym).call(*values)
       return result if result.is_a?(SOAPFault)
       if @response_style == :rpc
         response_rpc(result, mapping_registry, literal_mapping_registry, opt)

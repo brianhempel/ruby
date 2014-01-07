@@ -1303,10 +1303,10 @@ EOA
           combination(optional_variables, i).each do |names|
             have = {}
             names.each do |name|
-              have[name.intern] = true
+              have[name.to_sym] = true
             end
             have_required_variable_too =
-              have.merge({required_variable.intern => true})
+              have.merge({required_variable.to_sym => true})
 
             assert_not_set_error(not_set_error_name, [required_variable]) do
               __send__(assert_method_name, feed_type, maker_readers,
@@ -1340,10 +1340,10 @@ EOA
           combination(optional_variables, i).each do |names|
             have = {}
             names.each do |name|
-              have[name.intern] = true
+              have[name.to_sym] = true
             end
             have_required_variable_too =
-              have.merge({required_variable.intern => true})
+              have.merge({required_variable.to_sym => true})
 
             assert_not_set_error(not_set_error_name, [required_variable]) do
               __send__(assert_method_name, feed_type, maker_readers,

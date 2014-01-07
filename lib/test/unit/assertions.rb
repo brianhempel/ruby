@@ -383,7 +383,6 @@ EOT
       public
       def assert_throws(expected_symbol, message="", &proc)
         _wrap_assertion do
-          assert_instance_of(Symbol, expected_symbol, "assert_throws expects the symbol that should be thrown for its first argument")
           assert_block("Should have passed a block to assert_throws."){block_given?}
           caught = true
           begin
@@ -397,7 +396,7 @@ EOT
             if UncaughtThrow[error.class] !~ error.message
               raise error
             end
-            full_message = build_message(message, "<?> expected to be thrown but\n<?> was thrown.", expected_symbol, $1.intern)
+            full_message = build_message(message, "<?> expected to be thrown but\n<?> was thrown.", expected_symbol, $1.to_sym)
             flunk(full_message)
           end
         end
@@ -421,7 +420,7 @@ EOT
             if UncaughtThrow[error.class] !~ error.message
               raise error
             end
-            full_message = build_message(message, "<?> was thrown when nothing was expected", $1.intern)
+            full_message = build_message(message, "<?> was thrown when nothing was expected", $1.to_sym)
             flunk(full_message)
           end
           assert(true, "Expected nothing to be thrown")

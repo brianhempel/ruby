@@ -231,7 +231,7 @@ module REXML
               path = path[1..-1]
               # Goto Nodetest
             elsif path =~ AXIS
-              parsed << $1.tr('-','_').intern
+              parsed << $1.tr('-','_').to_sym
               path = $'
               # Goto Nodetest
             else
@@ -290,7 +290,7 @@ module REXML
         when NODE_TYPE
           type = $1
           path = $'
-          parsed << type.tr('-', '_').intern
+          parsed << type.tr('-', '_').to_sym
         when PI
           path = $'
           literal = nil
@@ -431,7 +431,7 @@ module REXML
               sym = "gt"
             end
             sym << "eq" if $1[-1] == ?=
-            n = [ sym.intern, n, [] ]
+            n = [ sym.to_sym, n, [] ]
             rest = AdditiveExpr( $', n[-1] )
           end
         end

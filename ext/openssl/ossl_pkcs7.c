@@ -391,9 +391,12 @@ static VALUE
 ossl_pkcs7_set_type(VALUE self, VALUE type)
 {
     PKCS7 *p7;
+	VALUE sym_type;
+
+	sym_type = rb_str_intern(type);
 
     GetPKCS7(self, p7);
-    if(!PKCS7_set_type(p7, ossl_pkcs7_sym2typeid(type)))
+    if(!PKCS7_set_type(p7, ossl_pkcs7_sym2typeid(sym_type)))
 	ossl_raise(ePKCS7Error, NULL);
 
     return type;
@@ -410,15 +413,15 @@ ossl_pkcs7_get_type(VALUE self)
 
     GetPKCS7(self, p7);
     if(PKCS7_type_is_signed(p7))
-	return ID2SYM(rb_intern("signed"));
+	return rb_str_new2("signed");
     if(PKCS7_type_is_encrypted(p7))
-	return ID2SYM(rb_intern("encrypted"));
+	return rb_str_new2("encrypted");
     if(PKCS7_type_is_enveloped(p7))
-	return ID2SYM(rb_intern("enveloped"));
+	return rb_str_new2("enveloped");
     if(PKCS7_type_is_signedAndEnveloped(p7))
-	return ID2SYM(rb_intern("signedAndEnveloped"));
+	return rb_str_new2("signedAndEnveloped");
     if(PKCS7_type_is_data(p7))
-	return ID2SYM(rb_intern("data"));
+	return rb_str_new2("data");
     return Qnil;
 }
 

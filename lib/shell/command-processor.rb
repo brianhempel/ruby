@@ -398,7 +398,7 @@ class Shell
       command = command.id2name if command.kind_of?(Symbol)
       begin
 	if iterator?
-	  @alias_map[ali.intern] = proc
+	  @alias_map[ali.to_sym] = proc
 
 	  eval((d = %Q[def #{ali}(*opts)
                           @shell.__send__(:#{command},
@@ -424,7 +424,7 @@ class Shell
    
     def self.unalias_command(ali)
       ali = ali.id2name if ali.kind_of?(Symbol)
-      @alias_map.delete ali.intern
+      @alias_map.delete ali.to_sym
       undef_system_command(ali)
     end
    
@@ -503,7 +503,7 @@ class Shell
     #
     #----------------------------------------------------------------------
     def self.add_delegate_command_to_shell(id)
-      id = id.intern if id.kind_of?(String)
+      id = id.to_sym if id.kind_of?(String)
       name = id.id2name
       if Shell.method_defined?(id)
 	Shell.notify "warn: override definnition of Shell##{name}."

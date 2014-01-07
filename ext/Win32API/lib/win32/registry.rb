@@ -388,7 +388,7 @@ module Win32
         %w/RegCloseKey      L            L/,
         %w/RegQueryInfoKey  LPPPPPPPPPPP L/,
       ].each do |fn|
-        const_set fn[0].intern, Win32API.new('advapi32.dll', *fn)
+        const_set fn[0].to_sym, Win32API.new('advapi32.dll', *fn)
       end
       
       module_function

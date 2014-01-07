@@ -161,7 +161,7 @@ module IRB
       when "--noverbose"
 	@CONF[:VERBOSE] = false
       when "--prompt-mode", "--prompt"
-	prompt_mode = ARGV.shift.upcase.tr("-", "_").intern
+	prompt_mode = ARGV.shift.upcase.tr("-", "_").to_sym
 	@CONF[:PROMPT_MODE] = prompt_mode
       when "--noprompt"
 	@CONF[:PROMPT_MODE] = :NULL

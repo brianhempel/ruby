@@ -793,18 +793,18 @@ ossl_sslctx_get_session_cache_stats(VALUE self)
     Data_Get_Struct(self, SSL_CTX, ctx);
 
     hash = rb_hash_new();
-    rb_hash_aset(hash, ID2SYM(rb_intern("cache_num")), LONG2NUM(SSL_CTX_sess_number(ctx)));
-    rb_hash_aset(hash, ID2SYM(rb_intern("connect")), LONG2NUM(SSL_CTX_sess_connect(ctx)));
-    rb_hash_aset(hash, ID2SYM(rb_intern("connect_good")), LONG2NUM(SSL_CTX_sess_connect_good(ctx)));
-    rb_hash_aset(hash, ID2SYM(rb_intern("connect_renegotiate")), LONG2NUM(SSL_CTX_sess_connect_renegotiate(ctx)));
-    rb_hash_aset(hash, ID2SYM(rb_intern("accept")), LONG2NUM(SSL_CTX_sess_accept(ctx)));
-    rb_hash_aset(hash, ID2SYM(rb_intern("accept_good")), LONG2NUM(SSL_CTX_sess_accept_good(ctx)));
-    rb_hash_aset(hash, ID2SYM(rb_intern("accept_renegotiate")), LONG2NUM(SSL_CTX_sess_accept_renegotiate(ctx)));
-    rb_hash_aset(hash, ID2SYM(rb_intern("cache_hits")), LONG2NUM(SSL_CTX_sess_hits(ctx)));
-    rb_hash_aset(hash, ID2SYM(rb_intern("cb_hits")), LONG2NUM(SSL_CTX_sess_cb_hits(ctx)));
-    rb_hash_aset(hash, ID2SYM(rb_intern("cache_misses")), LONG2NUM(SSL_CTX_sess_misses(ctx)));
-    rb_hash_aset(hash, ID2SYM(rb_intern("cache_full")), LONG2NUM(SSL_CTX_sess_cache_full(ctx)));
-    rb_hash_aset(hash, ID2SYM(rb_intern("timeouts")), LONG2NUM(SSL_CTX_sess_timeouts(ctx)));
+    rb_hash_aset(hash, rb_str_new2("cache_num"), LONG2NUM(SSL_CTX_sess_number(ctx)));
+    rb_hash_aset(hash, rb_str_new2("connect"), LONG2NUM(SSL_CTX_sess_connect(ctx)));
+    rb_hash_aset(hash, rb_str_new2("connect_good"), LONG2NUM(SSL_CTX_sess_connect_good(ctx)));
+    rb_hash_aset(hash, rb_str_new2("connect_renegotiate"), LONG2NUM(SSL_CTX_sess_connect_renegotiate(ctx)));
+    rb_hash_aset(hash, rb_str_new2("accept"), LONG2NUM(SSL_CTX_sess_accept(ctx)));
+    rb_hash_aset(hash, rb_str_new2("accept_good"), LONG2NUM(SSL_CTX_sess_accept_good(ctx)));
+    rb_hash_aset(hash, rb_str_new2("accept_renegotiate"), LONG2NUM(SSL_CTX_sess_accept_renegotiate(ctx)));
+    rb_hash_aset(hash, rb_str_new2("cache_hits"), LONG2NUM(SSL_CTX_sess_hits(ctx)));
+    rb_hash_aset(hash, rb_str_new2("cb_hits"), LONG2NUM(SSL_CTX_sess_cb_hits(ctx)));
+    rb_hash_aset(hash, rb_str_new2("cache_misses"), LONG2NUM(SSL_CTX_sess_misses(ctx)));
+    rb_hash_aset(hash, rb_str_new2("cache_full"), LONG2NUM(SSL_CTX_sess_cache_full(ctx)));
+    rb_hash_aset(hash, rb_str_new2("timeouts"), LONG2NUM(SSL_CTX_sess_timeouts(ctx)));
 
     return hash;
 }
