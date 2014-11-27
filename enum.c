@@ -759,6 +759,150 @@ enum_group_by(VALUE obj)
 }
 
 static VALUE
+frequencies_i(RB_BLOCK_CALL_FUNC_ARGLIST(i, hash))
+{
+    VALUE freq;
+	long freql;
+
+    ENUM_WANT_SVALUE();
+
+    freq = rb_hash_aref(hash, i);
+    if (!RB_TYPE_P(freq, T_FIXNUM)) {
+	freq = INT2FIX(0);
+    }
+
+	freql = FIX2LONG(freq);
+	freq = LONG2FIX(freql+1);
+
+	rb_hash_aset(hash, i, freq);
+
+    return Qnil;
+}
+
+static VALUE
+frequencies_sort_by_i(RB_BLOCK_CALL_FUNC_ARGLIST(i, dummy))
+{
+    VALUE freq;
+
+    freq = RARRAY_AREF(i, 1);
+
+    return LONG2FIX(-FIX2LONG(freq));
+}
+
+/*
+ *  call-seq:
+ *     enum.frequencies -> a_hash
+ *
+ *  Counts the number of times each object appears in <i>enum</i>.
+ *  Returns a hash where the keys are objects from <i>enum</i> and the
+ *  values are the number of times the object occurs in <i>enum</i>.
+ *
+ *  The hash is sorted, with the most common objects first.
+ *
+ *     %w[cat bird bird horse].frequencies
+ *       #=> {"bird" => 2, "horse" => 1, "cat" => 1}
+ *
+ */
+static VALUE
+enum_frequencies(VALUE obj)
+{
+    VALUE hash;
+    VALUE sorted;
+
+    hash = rb_hash_new();
+    rb_block_call(obj, id_each, 0, 0, frequencies_i, hash);
+
+    sorted = rb_block_call(hash, rb_intern("sort_by"), 0, 0, frequencies_sort_by_i, 0);
+    hash = rb_funcall(sorted, rb_intern("to_h"), 0);
+
+    OBJ_INFECT(hash, obj);
+
+    return hash;
+}
+
+static VALUE
+relative_frequencies_i(RB_BLOCK_CALL_FUNC_ARGLIST(i, memop))
+{
+    NODE *memo = RNODE(memop);
+    VALUE hash = memo->u1.value;
+    VALUE freq;
+	long freql;
+
+    ENUM_WANT_SVALUE();
+
+    freq = rb_hash_aref(hash, i);
+    if (!RB_TYPE_P(freq, T_FIXNUM)) {
+	freq = INT2FIX(0);
+    }
+
+	freql = FIX2LONG(freq);
+	freq = LONG2FIX(freql+1);
+
+    memo->u3.cnt += 1;
+
+	rb_hash_aset(hash, i, freq);
+
+    return Qnil;
+}
+
+static VALUE
+relative_frequencies_norm_i(RB_BLOCK_CALL_FUNC_ARGLIST(i, count))
+{
+    VALUE freq;
+	long freql;
+
+    freq = RARRAY_AREF(i, 1);
+    freql = FIX2LONG(freq);
+    freq = DBL2NUM((double)freql / count);
+
+    RARRAY_ASET(i, 1, freq);
+
+    return Qnil;
+}
+
+/*
+ *  call-seq:
+ *     enum.relative_frequencies -> a_hash
+ *
+ *  Calculates the relative frequency of each object appearing in <i>enum</i>.
+ *  Returns a hash where the keys are objects from <i>enum</i> and the
+ *  values are numbers between 0.0 and 1.0, indicating what proportion of
+ *  the entries in <i>enum</i> contain the object.
+ *
+ *  For example, the pair <code>"crow" => 0.1</code> means that one out of
+ *  every ten entries in <i>enum</i> contains <code>"crow"</code>.
+ *
+ *  The hash is sorted, with the most common objects first.
+ *
+ *     %w[cat bird bird horse].relative_frequencies
+ *       #=> {"bird" => 0.5, "horse" => 0.25, "cat" => 0.25}
+ *
+ */
+static VALUE
+enum_relative_frequencies(VALUE obj)
+{
+    VALUE hash, sorted;
+    NODE *memo;
+    double count;
+
+    hash = rb_hash_new();
+    memo = NEW_MEMO(hash, 0, 0);
+    rb_block_call(obj, id_each, 0, 0, relative_frequencies_i, (VALUE)memo);
+    count = (double)memo->u3.cnt;
+
+    sorted = rb_block_call(hash, rb_intern("sort_by"), 0, 0, frequencies_sort_by_i, 0);
+
+    rb_block_call(sorted, id_each, 0, 0, relative_frequencies_norm_i, count);
+
+    hash = rb_funcall(sorted, rb_intern("to_h"), 0);
+
+    OBJ_INFECT(hash, obj);
+
+    return hash;
+}
+
+
+static VALUE
 first_i(RB_BLOCK_CALL_FUNC_ARGLIST(i, params))
 {
     NODE *memo = RNODE(params);
@@ -3403,6 +3547,8 @@ Init_Enumerable(void)
     rb_define_method(rb_mEnumerable, "reduce", enum_inject, -1);
     rb_define_method(rb_mEnumerable, "partition", enum_partition, 0);
     rb_define_method(rb_mEnumerable, "group_by", enum_group_by, 0);
+    rb_define_method(rb_mEnumerable, "frequencies", enum_frequencies, 0);
+    rb_define_method(rb_mEnumerable, "relative_frequencies", enum_relative_frequencies, 0);
     rb_define_method(rb_mEnumerable, "first", enum_first, -1);
     rb_define_method(rb_mEnumerable, "all?", enum_all, 0);
     rb_define_method(rb_mEnumerable, "any?", enum_any, 0);

@@ -169,6 +169,20 @@ class TestEnumerable < Test::Unit::TestCase
     assert_equal(h, @obj.each_with_index.group_by(&cond))
   end
 
+  def test_frequencies
+    h = { 1 => 2, 2 => 2, 3 => 1}
+    assert_equal(h, @obj.frequencies)
+
+    assert_equal([:c, 2], [:a, :b, :c, :c].frequencies.first)
+  end
+
+  def test_relative_frequencies
+    h = { 1 => 0.4, 2 => 0.4, 3 => 0.2}
+    assert_equal(h, @obj.relative_frequencies)
+
+    assert_equal([:c, 0.5], [:a, :b, :c, :c].relative_frequencies.first)
+  end
+
   def test_first
     assert_equal(1, @obj.first)
     assert_equal([1, 2, 3], @obj.first(3))
